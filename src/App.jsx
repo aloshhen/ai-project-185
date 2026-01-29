@@ -1,19 +1,52 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Camera, Mail, Github, Instagram, X, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Mail, Instagram, Github, X, ChevronLeft, ChevronRight } from 'lucide-react'
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true)
   const [selectedPhoto, setSelectedPhoto] = useState(null)
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const photos = [
-    { id: 1, src: '/user-photo-1.jpg', title: 'Фото 1' },
-    { id: 2, src: '/user-photo-2.jpg', title: 'Фото 2' },
-    { id: 3, src: '/user-photo-3.jpg', title: 'Фото 3' },
-    { id: 4, src: '/user-photo-4.jpg', title: 'Фото 4' },
-    { id: 5, src: '/user-photo-5.jpg', title: 'Фото 5' },
-    { id: 6, src: '/user-photo-6.jpg', title: 'Фото 6' }
+    { 
+      id: 1, 
+      src: 'https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/edit-photo-1769685356.JPG?', 
+      title: 'Фото 1' 
+    },
+    { 
+      id: 2, 
+      src: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&q=80', 
+      title: 'Природа' 
+    },
+    { 
+      id: 3, 
+      src: 'https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/edit-photo-1769685390.jpg?', 
+      title: 'Фото 2' 
+    },
+    { 
+      id: 4, 
+      src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200&q=80', 
+      title: 'Туман' 
+    },
+    { 
+      id: 5, 
+      src: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1200&q=80', 
+      title: 'Лес' 
+    },
+    { 
+      id: 6, 
+      src: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=1200&q=80', 
+      title: 'Озеро' 
+    }
   ]
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   const openLightbox = (photo, index) => {
     setSelectedPhoto(photo)
@@ -36,107 +69,97 @@ function App() {
     setSelectedPhoto(photos[newIndex])
   }
 
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-black z-[100] flex items-center justify-center">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="w-full h-full object-cover"
+          src="https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/edit-video-1769685477.MOV?"
+        />
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, repeat: Infinity, repeatType: "reverse" }}
+            className="text-white text-2xl font-light tracking-widest"
+          >
+            ЗАГРУЗКА...
+          </motion.div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-white">
       {/* HEADER */}
-      <header className="fixed top-0 w-full bg-slate-950/80 backdrop-blur-2xl z-40 border-b border-slate-800/50">
-        <nav className="container mx-auto px-6 py-5 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Camera className="w-7 h-7 text-violet-500" />
-            <span className="text-2xl font-bold text-white tracking-tight">Портфолио</span>
-          </div>
+      <header className="fixed top-0 w-full bg-white/80 backdrop-blur-sm z-40 border-b border-gray-100">
+        <nav className="container mx-auto px-6 md:px-12 py-6 flex items-center justify-between">
+          <span className="text-sm font-medium tracking-wider text-gray-900">ПОРТФОЛИО</span>
           <div className="hidden md:flex space-x-8">
-            <a href="#gallery" className="text-slate-400 hover:text-violet-400 transition-colors font-medium">Галерея</a>
-            <a href="#about" className="text-slate-400 hover:text-violet-400 transition-colors font-medium">О себе</a>
-            <a href="#contact" className="text-slate-400 hover:text-violet-400 transition-colors font-medium">Контакты</a>
+            <a href="#gallery" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Галерея</a>
+            <a href="#about" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">О себе</a>
+            <a href="#contact" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Контакты</a>
           </div>
         </nav>
       </header>
 
       {/* HERO */}
-      <section className="relative pt-28 pb-20 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-600/10 via-slate-950 to-fuchsia-600/10" />
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-violet-600/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-10 right-10 w-96 h-96 bg-fuchsia-600/20 rounded-full blur-3xl" />
-        </div>
-        
-        <div className="relative z-10 container mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h1 className="text-6xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-tight">
-                Мое <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">Фото</span><br />Портфолио
-              </h1>
-              <p className="text-xl text-slate-400 mb-8 leading-relaxed">
-                Коллекция моих лучших работ и моментов, запечатленных через объектив камеры
-              </p>
-              <button 
-                onClick={() => document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' })}
-                className="bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-700 hover:to-fuchsia-700 text-white px-8 py-4 rounded-xl text-lg font-bold transition-all transform hover:scale-105 shadow-lg shadow-violet-600/30"
-              >
-                Смотреть галерею
-              </button>
-            </motion.div>
+      <section className="pt-40 pb-24 px-6 md:px-12">
+        <div className="container mx-auto max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h1 className="text-5xl md:text-7xl font-light text-gray-900 mb-6 tracking-tight">
+              Фотография
+            </h1>
+            <p className="text-lg text-gray-500 max-w-xl mx-auto">
+              Коллекция избранных работ
+            </p>
+          </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-violet-600/20 border border-slate-800/50">
-                <img 
-                  src="/user-photo-1.jpg" 
-                  alt="Hero" 
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent" />
-              </div>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="relative aspect-[16/10] overflow-hidden cursor-pointer group"
+            onClick={() => openLightbox(photos[0], 0)}
+          >
+            <img 
+              src="https://oejgkvftpbinliuopipr.supabase.co/storage/v1/object/public/assets/user_347995964/edit-photo-1769685356.JPG?"
+              alt="Hero"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+          </motion.div>
         </div>
       </section>
 
       {/* GALLERY */}
-      <section id="gallery" className="py-20 px-6 bg-gradient-to-b from-slate-950 to-slate-900">
-        <div className="container mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-5xl md:text-6xl font-black text-white mb-4 tracking-tight">
-              Фото <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">Галерея</span>
-            </h2>
-            <p className="text-xl text-slate-400">Моя коллекция избранных работ</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {photos.map((photo, index) => (
+      <section id="gallery" className="py-24 px-6 md:px-12">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {photos.slice(1).map((photo, index) => (
               <motion.div
                 key={photo.id}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative aspect-square overflow-hidden rounded-2xl cursor-pointer border border-slate-800/50 hover:border-violet-600/50 transition-all"
-                onClick={() => openLightbox(photo, index)}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="group relative aspect-square overflow-hidden cursor-pointer"
+                onClick={() => openLightbox(photo, index + 1)}
               >
                 <img 
-                  src={photo.src} 
+                  src={photo.src}
                   alt={photo.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="text-white text-xl font-bold">{photo.title}</h3>
-                </div>
               </motion.div>
             ))}
           </div>
@@ -144,24 +167,24 @@ function App() {
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="py-20 px-6 bg-slate-900">
-        <div className="container mx-auto max-w-4xl">
+      <section id="about" className="py-24 px-6 md:px-12 bg-gray-50">
+        <div className="container mx-auto max-w-3xl">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <h2 className="text-5xl md:text-6xl font-black text-white mb-8 tracking-tight">
-              О <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">себе</span>
+            <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-8 tracking-tight">
+              О себе
             </h2>
-            <div className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl p-10 rounded-2xl border border-slate-700/50">
-              <p className="text-xl text-slate-300 leading-relaxed mb-6">
-                Добро пожаловать в мое портфолио! Я увлекаюсь фотографией и стремлюсь запечатлеть уникальные моменты и эмоции через объектив камеры.
+            <div className="space-y-6 text-gray-600 leading-relaxed">
+              <p className="text-lg">
+                Добро пожаловать в мое портфолио. Я увлекаюсь фотографией и стремлюсь запечатлеть уникальные моменты и эмоции через объектив камеры.
               </p>
-              <p className="text-lg text-slate-400 leading-relaxed">
-                Каждое фото в моей коллекции — это история, момент времени, который я хочу сохранить и поделиться с вами. Спасибо, что заглянули!
+              <p>
+                Каждое фото в моей коллекции — это история, момент времени, который я хочу сохранить и поделиться с вами. Спасибо, что заглянули.
               </p>
             </div>
           </motion.div>
@@ -169,48 +192,48 @@ function App() {
       </section>
 
       {/* CONTACT */}
-      <section id="contact" className="py-20 px-6 bg-gradient-to-b from-slate-900 to-slate-950">
+      <section id="contact" className="py-24 px-6 md:px-12">
         <div className="container mx-auto max-w-3xl text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-5xl md:text-6xl font-black text-white mb-6 tracking-tight">
-              Свяжитесь <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">со мной</span>
+            <h2 className="text-4xl md:text-5xl font-light text-gray-900 mb-8 tracking-tight">
+              Контакты
             </h2>
-            <p className="text-xl text-slate-400 mb-12">
-              Готов ответить на ваши вопросы и обсудить возможное сотрудничество
+            <p className="text-lg text-gray-500 mb-12">
+              Свяжитесь со мной
             </p>
             
             <div className="flex flex-wrap justify-center gap-6">
               <a 
                 href="mailto:your-email@example.com"
-                className="flex items-center gap-3 bg-slate-800/50 hover:bg-slate-700/50 backdrop-blur-xl border border-slate-700/50 hover:border-violet-600/50 px-8 py-4 rounded-xl transition-all group"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
-                <Mail className="w-6 h-6 text-violet-400 group-hover:scale-110 transition-transform" />
-                <span className="text-white font-semibold">Email</span>
+                <Mail className="w-5 h-5" />
+                <span className="text-sm">Email</span>
               </a>
               
               <a 
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 bg-slate-800/50 hover:bg-slate-700/50 backdrop-blur-xl border border-slate-700/50 hover:border-fuchsia-600/50 px-8 py-4 rounded-xl transition-all group"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
-                <Instagram className="w-6 h-6 text-fuchsia-400 group-hover:scale-110 transition-transform" />
-                <span className="text-white font-semibold">Instagram</span>
+                <Instagram className="w-5 h-5" />
+                <span className="text-sm">Instagram</span>
               </a>
               
               <a 
                 href="https://github.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 bg-slate-800/50 hover:bg-slate-700/50 backdrop-blur-xl border border-slate-700/50 hover:border-violet-600/50 px-8 py-4 rounded-xl transition-all group"
+                className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
-                <Github className="w-6 h-6 text-violet-400 group-hover:scale-110 transition-transform" />
-                <span className="text-white font-semibold">GitHub</span>
+                <Github className="w-5 h-5" />
+                <span className="text-sm">GitHub</span>
               </a>
             </div>
           </motion.div>
@@ -218,14 +241,10 @@ function App() {
       </section>
 
       {/* FOOTER */}
-      <footer className="bg-slate-950 border-t border-slate-800/50 py-8 px-6">
+      <footer className="border-t border-gray-100 py-8 px-6 md:px-12">
         <div className="container mx-auto text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Camera className="w-6 h-6 text-violet-500" />
-            <span className="text-xl font-bold text-white">Портфолио</span>
-          </div>
-          <p className="text-slate-500 text-sm">
-            © 2024 Фото Портфолио. Все права защищены.
+          <p className="text-sm text-gray-400">
+            © 2024 Портфолио
           </p>
         </div>
       </footer>
@@ -237,44 +256,43 @@ function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 bg-white z-50 flex items-center justify-center p-4"
             onClick={closeLightbox}
           >
             <button
               onClick={closeLightbox}
-              className="absolute top-6 right-6 text-white hover:text-violet-400 transition-colors"
+              className="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition-colors"
             >
-              <X className="w-10 h-10" />
+              <X className="w-6 h-6" />
             </button>
 
             <button
               onClick={(e) => { e.stopPropagation(); prevPhoto(); }}
-              className="absolute left-6 text-white hover:text-violet-400 transition-colors"
+              className="absolute left-6 text-gray-400 hover:text-gray-900 transition-colors"
             >
-              <ChevronLeft className="w-12 h-12" />
+              <ChevronLeft className="w-8 h-8" />
             </button>
 
             <button
               onClick={(e) => { e.stopPropagation(); nextPhoto(); }}
-              className="absolute right-6 text-white hover:text-violet-400 transition-colors"
+              className="absolute right-6 text-gray-400 hover:text-gray-900 transition-colors"
             >
-              <ChevronRight className="w-12 h-12" />
+              <ChevronRight className="w-8 h-8" />
             </button>
 
             <motion.img
               key={selectedPhoto.id}
-              initial={{ scale: 0.9, opacity: 0 }}
+              initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+              exit={{ scale: 0.95, opacity: 0 }}
               src={selectedPhoto.src}
               alt={selectedPhoto.title}
-              className="max-w-full max-h-full object-contain rounded-lg"
+              className="max-w-full max-h-full object-contain"
               onClick={(e) => e.stopPropagation()}
             />
 
             <div className="absolute bottom-6 left-0 right-0 text-center">
-              <p className="text-white text-xl font-semibold">{selectedPhoto.title}</p>
-              <p className="text-slate-400 mt-2">{currentIndex + 1} / {photos.length}</p>
+              <p className="text-sm text-gray-500">{currentIndex + 1} / {photos.length}</p>
             </div>
           </motion.div>
         )}
